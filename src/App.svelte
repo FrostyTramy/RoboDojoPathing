@@ -3043,22 +3043,9 @@
       bind:this={twoElement}
       bind:clientWidth={width}
       bind:clientHeight={height}
-      class="h-full aspect-square rounded-lg shadow-md bg-neutral-50 dark:bg-neutral-900 relative overflow-clip"
+      class="h-full aspect-square rounded-lg shadow-md relative overflow-clip border border-blue-900/40"
       role="application"
-      style="
-    user-select: none;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    -webkit-touch-callout: none;
-    -webkit-tap-highlight-color: transparent;
-    user-drag: none;
-    -webkit-user-drag: none;
-    -khtml-user-drag: none;
-    -moz-user-drag: none;
-    -ms-user-drag: none;
-    -o-user-drag: none;
-  "
+      style="background: #060d1a; user-select: none; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; -webkit-touch-callout: none; -webkit-tap-highlight-color: transparent; user-drag: none; -webkit-user-drag: none; -khtml-user-drag: none; -moz-user-drag: none; -ms-user-drag: none; -o-user-drag: none;"
       on:contextmenu={(e) => e.preventDefault()}
       on:dragstart={(e) => e.preventDefault()}
       on:selectstart={(e) => e.preventDefault()}

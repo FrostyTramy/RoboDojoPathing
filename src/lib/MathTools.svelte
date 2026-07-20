@@ -120,8 +120,8 @@
     ? { x: x.invert(robotXY.x), y: y.invert(robotXY.y) }
     : protractorPos;
 
-  const FIELD_SIZE = 141.5;
-  let spacing = 12;
+  const FIELD_SIZE = 359.41;
+  let spacing = 30;
   let gridPositions: number[] = [];
   let labelInterval = 1; // Show label every N grid lines
   let labelFontSize = "text-xs"; // Font size class for labels

@@ -70,8 +70,8 @@
   let saveDropdownRef: HTMLElement;
   let saveButtonRef: HTMLElement;
 
-  let selectedGridSize = 12;
-  const gridSizeOptions = [0, 1, 3, 6, 12, 24];
+  let selectedGridSize = 30;
+  const gridSizeOptions = [0, 2, 8, 15, 30, 60];
 
   // Ensure File Manager and Export dialog are mutually exclusive
   $: if (fileManagerOpen && exportDialogOpen) {
@@ -297,7 +297,8 @@
 <SettingsDialog bind:isOpen={settingsOpen} bind:settings />
 
 <div
-  class="absolute top-0 left-0 w-full bg-neutral-50 dark:bg-neutral-900 shadow-md flex flex-row justify-between items-center px-6 py-4 border-b-[0.75px] border-[#fe55a2]"
+  class="absolute top-0 left-0 w-full flex flex-row justify-between items-center px-6 py-4 border-b border-blue-800/60"
+  style="background: linear-gradient(90deg, #060e20 0%, #0d1a35 50%, #0a1628 100%); box-shadow: 0 2px 24px 0 rgba(30,80,160,0.18);"
 >
   <!-- Title -->
   <div class="font-semibold flex flex-col justify-start items-start">
@@ -326,7 +327,8 @@
         </svg>
       </button>
 
-      <span>Pedro Pathing Visualizer</span>
+      <img src="/Logo.png" alt="RoboDojo" class="h-7 w-auto rounded bg-white px-1" />
+      <span class="text-blue-400 font-bold tracking-wide">#23205</span>
       <!-- GitHub Repo Link (moved next to title) -->
       <a
         target="_blank"
@@ -373,7 +375,7 @@
             {/if}
         </div>
         <div class="text-neutral-500 dark:text-neutral-400">
-            ({(timePrediction?.totalDistance ?? 0).toFixed(0)} in)
+            ({(timePrediction?.totalDistance ?? 0).toFixed(0)} cm)
         </div>
       </div>
 

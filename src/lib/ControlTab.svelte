@@ -12,6 +12,8 @@
   import { getRandomColor } from "../utils";
   import ObstaclesSection from "./components/ObstaclesSection.svelte";
   import RobotPositionDisplay from "./components/RobotPositionDisplay.svelte";
+  import RobotPlacementGrid from "./components/RobotPlacementGrid.svelte";
+  import StartingFacing from "./components/StartingFacing.svelte";
   import StartingPointSection from "./components/StartingPointSection.svelte";
   import PathLineSection from "./components/PathLineSection.svelte";
   import PlaybackControls from "./components/PlaybackControls.svelte";
@@ -411,8 +413,8 @@
         };
       } else {
         newPoint = {
-          x: _.random(0, 141.5),
-          y: _.random(0, 141.5),
+          x: _.random(0, 359.41),
+          y: _.random(0, 359.41),
           heading: "tangential",
           reverse: false,
         };
@@ -534,8 +536,8 @@
       id: makeId(),
       name: `Path ${lines.length + 1}`,
       endPoint: {
-        x: _.random(0, 141.5),
-        y: _.random(0, 141.5),
+        x: _.random(0, 359.41),
+        y: _.random(0, 359.41),
         heading: "tangential",
         reverse: false,
       },
@@ -635,8 +637,8 @@
       id: makeId(),
       name: `Path ${lines.length + 1}`,
       endPoint: {
-        x: _.random(0, 141.5),
-        y: _.random(0, 141.5),
+        x: _.random(0, 359.41),
+        y: _.random(0, 359.41),
         heading: "tangential",
         reverse: false,
       },
@@ -775,13 +777,23 @@
 
 <div class="flex-1 flex flex-col justify-start items-center gap-2 h-full">
   <div
-    class="flex flex-col justify-start items-start w-full rounded-lg bg-neutral-50 dark:bg-neutral-900 shadow-md p-4 overflow-y-scroll overflow-x-hidden h-full gap-6"
+    class="flex flex-col justify-start items-start w-full rounded-lg shadow-md p-4 overflow-y-scroll overflow-x-hidden h-full gap-6 border border-blue-900/40"
+    style="background: linear-gradient(180deg, #0a1628 0%, #080f1f 100%);"
   >
     <ObstaclesSection bind:shapes bind:collapsedObstacles />
 
-    <RobotPositionDisplay {robotXY} {robotHeading} {x} {y} />
+    <RobotPositionDisplay
+      {robotXY} {robotHeading} {x} {y}
+      bind:settings
+      on:change={() => { settings = { ...settings }; }}
+    />
 
     <StartingPointSection bind:startPoint {addPathAtStart} {addWaitAtStart} />
+
+    <!-- Facing: changes lines[0].endPoint.startDeg which is what the renderer actually uses -->
+    <StartingFacing bind:lines />
+
+    <RobotPlacementGrid bind:startPoint {settings} {lines} />
 
     <div class="w-full rounded-md border border-neutral-200 dark:border-neutral-700 p-3 bg-white dark:bg-neutral-800">
       <div class="flex items-center gap-2 mb-2">

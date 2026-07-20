@@ -3,104 +3,108 @@
   export let endPoint: any;
   export let locked: boolean = false;
   const dispatch = createEventDispatcher();
+
+  let useRadians = false;
+
+  const toDisplay = (deg: number) =>
+    useRadians ? parseFloat((deg * Math.PI / 180).toFixed(4)) : deg;
+
+  const fromDisplay = (val: number) =>
+    useRadians ? val * 180 / Math.PI : val;
 </script>
 
-<select
-  bind:value={endPoint.heading}
-  on:change={() => {
-    // Initialize missing properties based on the selected heading type
-    if (endPoint.heading === "constant" && endPoint.degrees === undefined) {
-      endPoint.degrees = 0;
-    } else if (endPoint.heading === "linear") {
-      if (endPoint.startDeg === undefined) endPoint.startDeg = 0;
-      if (endPoint.endDeg === undefined) endPoint.endDeg = 0;
-    } else if (endPoint.heading === "tangential") {
-      if (endPoint.reverse === undefined) endPoint.reverse = false;
-    }
-    dispatch("change");
-  }}
-  class=" rounded-md bg-neutral-100 dark:bg-neutral-950 dark:border-neutral-700 border-[0.5px] focus:outline-none w-28 text-sm"
-  title="The heading style of the robot. 
-With constant heading, the robot maintains the same heading throughout the line. 
-With linear heading, heading changes linearly between given start and end angles. 
-With tangential heading, the heading follows the direction of the line."
-  disabled={locked}
->
-  <option value="constant">Constant</option>
-  <option value="linear">Linear</option>
-  <option value="tangential">Tangential</option>
-</select>
-
-{#if endPoint.heading === "linear"}
-  <div class="flex items-center gap-1">
-    <span class="text-xs text-neutral-600 dark:text-neutral-400">Start:</span>
-    <input
-      class="pl-1.5 rounded-md bg-neutral-100 dark:bg-neutral-950 dark:border-neutral-700 border-[0.5px] focus:outline-none w-14"
-      step="1"
-      type="number"
-      min="-180"
-      max="180"
-      bind:value={endPoint.startDeg}
-      on:input={() => dispatch("change")}
-      on:blur={() => dispatch("commit")}
-      title="The heading the robot starts this line at (in degrees)"
-      disabled={locked}
-    />
-    <span class="text-xs text-neutral-600 dark:text-neutral-400 ml-1">End:</span
-    >
-    <input
-      class="pl-1.5 rounded-md bg-neutral-100 dark:bg-neutral-950 dark:border-neutral-700 border-[0.5px] focus:outline-none w-14"
-      step="1"
-      type="number"
-      min="-180"
-      max="180"
-      bind:value={endPoint.endDeg}
-      on:input={() => dispatch("change")}
-      on:blur={() => dispatch("commit")}
-      title="The heading the robot ends this line at (in degrees)"
-      disabled={locked}
-    />
-  </div>
-{:else if endPoint.heading === "constant"}
-  <div class="flex items-center gap-1">
-    <span class="text-xs text-neutral-600 dark:text-neutral-400">Deg:</span>
-    <input
-      class="pl-1.5 rounded-md bg-neutral-100 dark:bg-neutral-950 dark:border-neutral-700 border-[0.5px] focus:outline-none w-14"
-      step="1"
-      type="number"
-      min="-180"
-      max="180"
-      value={endPoint.degrees || 0}
-      on:input={(e) => {
-        const value = parseFloat(e.target.value);
-        if (!isNaN(value)) {
-          endPoint.degrees = value;
-        } else {
-          // If empty or invalid, set to 0
-          endPoint.degrees = 0;
-          e.target.value = "0";
-        }
-        dispatch("change");
-      }}
-      on:blur={(e) => {
-        if (e.target.value === "" || isNaN(parseFloat(e.target.value))) {
-          endPoint.degrees = 0;
-          e.target.value = "0";
-        }
-        dispatch("commit");
-      }}
-      title="The constant heading the robot maintains throughout this line (in degrees)"
-      disabled={locked}
-    />
-  </div>
-{:else if endPoint.heading === "tangential"}
-  <p class="text-sm font-extralight">Reverse:</p>
-  <input
-    type="checkbox"
-    bind:checked={endPoint.reverse}
-    on:change={() => dispatch("change")}
-    on:blur={() => dispatch("commit")}
-    title="Reverse the direction the robot faces along the tangential path"
+<div class="flex items-center gap-1 flex-wrap">
+  <select
+    bind:value={endPoint.heading}
+    on:change={() => {
+      if (endPoint.heading === "constant" && endPoint.degrees === undefined) endPoint.degrees = 0;
+      else if (endPoint.heading === "linear") {
+        if (endPoint.startDeg === undefined) endPoint.startDeg = 0;
+        if (endPoint.endDeg === undefined) endPoint.endDeg = 0;
+      } else if (endPoint.heading === "tangential") {
+        if (endPoint.reverse === undefined) endPoint.reverse = false;
+      }
+      dispatch("change");
+    }}
+    class="rounded-md bg-neutral-100 dark:bg-neutral-950 dark:border-neutral-700 border-[0.5px] focus:outline-none w-28 text-sm"
     disabled={locked}
-  />
-{/if}
+  >
+    <option value="constant">Constant</option>
+    <option value="linear">Linear</option>
+    <option value="tangential">Tangential</option>
+  </select>
+
+  <!-- deg/rad toggle (hidden for tangential) -->
+  {#if endPoint.heading !== "tangential"}
+    <button
+      on:click={() => (useRadians = !useRadians)}
+      class="px-1.5 py-0.5 text-xs rounded border font-mono
+             {useRadians
+               ? 'bg-blue-500 text-white border-blue-600'
+               : 'bg-neutral-100 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-600 text-neutral-600 dark:text-neutral-300'}"
+      title="Switch between degrees and radians"
+    >
+      {useRadians ? "rad" : "deg"}
+    </button>
+  {/if}
+
+  {#if endPoint.heading === "linear"}
+    <div class="flex items-center gap-1 mt-1 w-full">
+      <span class="text-xs text-neutral-600 dark:text-neutral-400">Start:</span>
+      <input
+        class="pl-1.5 rounded-md bg-neutral-100 dark:bg-neutral-950 dark:border-neutral-700 border-[0.5px] focus:outline-none w-16"
+        step={useRadians ? 0.01 : 1}
+        type="number"
+        value={toDisplay(endPoint.startDeg ?? 0)}
+        on:input={(e) => {
+          const v = parseFloat(e.target.value);
+          if (!isNaN(v)) { endPoint.startDeg = fromDisplay(v); dispatch("change"); }
+        }}
+        on:blur={() => dispatch("commit")}
+        title="Start heading ({useRadians ? 'rad' : 'deg'})"
+        disabled={locked}
+      />
+      <span class="text-xs text-neutral-600 dark:text-neutral-400">End:</span>
+      <input
+        class="pl-1.5 rounded-md bg-neutral-100 dark:bg-neutral-950 dark:border-neutral-700 border-[0.5px] focus:outline-none w-16"
+        step={useRadians ? 0.01 : 1}
+        type="number"
+        value={toDisplay(endPoint.endDeg ?? 0)}
+        on:input={(e) => {
+          const v = parseFloat(e.target.value);
+          if (!isNaN(v)) { endPoint.endDeg = fromDisplay(v); dispatch("change"); }
+        }}
+        on:blur={() => dispatch("commit")}
+        title="End heading ({useRadians ? 'rad' : 'deg'})"
+        disabled={locked}
+      />
+    </div>
+  {:else if endPoint.heading === "constant"}
+    <div class="flex items-center gap-1 mt-1 w-full">
+      <span class="text-xs text-neutral-600 dark:text-neutral-400">{useRadians ? "Rad:" : "Deg:"}</span>
+      <input
+        class="pl-1.5 rounded-md bg-neutral-100 dark:bg-neutral-950 dark:border-neutral-700 border-[0.5px] focus:outline-none w-16"
+        step={useRadians ? 0.01 : 1}
+        type="number"
+        value={toDisplay(endPoint.degrees ?? 0)}
+        on:input={(e) => {
+          const v = parseFloat(e.target.value);
+          if (!isNaN(v)) { endPoint.degrees = fromDisplay(v); dispatch("change"); }
+          else { endPoint.degrees = 0; dispatch("change"); }
+        }}
+        on:blur={() => dispatch("commit")}
+        title="Heading ({useRadians ? 'rad' : 'deg'})"
+        disabled={locked}
+      />
+    </div>
+  {:else if endPoint.heading === "tangential"}
+    <p class="text-sm font-extralight">Reverse:</p>
+    <input
+      type="checkbox"
+      bind:checked={endPoint.reverse}
+      on:change={() => dispatch("change")}
+      on:blur={() => dispatch("commit")}
+      disabled={locked}
+    />
+  {/if}
+</div>

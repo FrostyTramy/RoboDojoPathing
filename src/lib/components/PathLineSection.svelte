@@ -310,7 +310,7 @@
           step={$snapToGrid && $showGrid ? $gridSize : 0.1}
           type="number"
           min="0"
-          max="141.5"
+          max="360"
           bind:value={line.endPoint.x}
           disabled={line.locked}
           title={snapToGridTitle}
@@ -320,7 +320,7 @@
           class="pl-1.5 rounded-md bg-neutral-100 dark:bg-neutral-950 dark:border-neutral-700 border-[0.5px] focus:outline-none w-28"
           step={$snapToGrid && $showGrid ? $gridSize : 0.1}
           min="0"
-          max="141.5"
+          max="360"
           type="number"
           bind:value={line.endPoint.y}
           disabled={line.locked}

@@ -2,7 +2,7 @@ import { DEFAULT_SETTINGS } from "../config/defaults";
 import type { Settings } from "../types";
 
 // Versioning for settings schema
-const SETTINGS_VERSION = "1.0.0";
+const SETTINGS_VERSION = "2.0.0";
 
 interface StoredSettings {
   version: string;
@@ -22,19 +22,19 @@ function migrateSettings(stored: Partial<StoredSettings>): Settings {
     return defaults;
   }
 
-  // Always merge with defaults to ensure new settings are included
-  // and removed settings are not persisted
   const migrated: Settings = { ...defaults };
 
-  // Copy only the properties that exist in both objects
   Object.keys(stored.settings).forEach((key) => {
     if (key in migrated) {
-      // @ts-ignore - We know the key exists in Settings
+      // @ts-ignore
       migrated[key] = stored.settings[key];
     }
   });
 
-  // Legacy support: older builds stored custom field as "custom||<data-url>".
+  // If robot dimensions look like old inch values (< 25), reset to cm defaults
+  if (migrated.rWidth < 25) migrated.rWidth = defaults.rWidth;
+  if (migrated.rHeight < 25) migrated.rHeight = defaults.rHeight;
+
   if (
     typeof migrated.fieldMap === "string" &&
     migrated.fieldMap.startsWith("custom||")
@@ -53,36 +53,13 @@ function migrateSettings(stored: Partial<StoredSettings>): Settings {
   return migrated;
 }
 
-// Load settings from localStorage
+// Always start fresh — no persistence across sessions
 export async function loadSettings(): Promise<Settings> {
-  try {
-    const raw = localStorage.getItem(SETTINGS_STORAGE_KEY);
-    if (!raw) {
-      return { ...DEFAULT_SETTINGS };
-    }
-    const stored: StoredSettings = JSON.parse(raw);
-    if (stored.version !== SETTINGS_VERSION) {
-      // Optionally handle migration here
-    }
-    return migrateSettings(stored);
-  } catch (error) {
-    return { ...DEFAULT_SETTINGS };
-  }
+  return { ...DEFAULT_SETTINGS };
 }
 
-// Save settings to localStorage
-export async function saveSettings(settings: Settings): Promise<boolean> {
-  try {
-    const stored: StoredSettings = {
-      version: SETTINGS_VERSION,
-      settings: { ...settings },
-      lastUpdated: new Date().toISOString(),
-    };
-    localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(stored));
-    return true;
-  } catch (error) {
-    return false;
-  }
+export async function saveSettings(_settings: Settings): Promise<boolean> {
+  return true;
 }
 
 // Reset settings to defaults

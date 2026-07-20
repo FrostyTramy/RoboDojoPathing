@@ -2,17 +2,17 @@ import type { Point, Line, Shape, Settings } from "../types";
 import { getRandomColor } from "../utils";
 
 /**
- * Default robot dimensions
+ * Default robot dimensions (cm)
  */
-export const DEFAULT_ROBOT_WIDTH = 16;
-export const DEFAULT_ROBOT_HEIGHT = 16;
+export const DEFAULT_ROBOT_WIDTH = 36;
+export const DEFAULT_ROBOT_HEIGHT = 30;
 
 /**
- * Default canvas drawing settings
+ * Default canvas drawing settings (cm)
  */
-export const POINT_RADIUS = 1.15;
-export const LINE_WIDTH = 0.57;
-export const FIELD_SIZE = 141.5;
+export const POINT_RADIUS = 2.921;
+export const LINE_WIDTH = 1.45;
+export const FIELD_SIZE = 359.41;
 
 /**
  * Available field maps
@@ -25,25 +25,25 @@ export const AVAILABLE_FIELD_MAPS = [
 ];
 
 /**
- * Default settings
+ * Default settings (all units in cm and cm/s)
  */
 export const DEFAULT_SETTINGS: Settings = {
-  xVelocity: 75,
-  yVelocity: 65,
+  xVelocity: 190,
+  yVelocity: 165,
   aVelocity: Math.PI,
   kFriction: 0.1,
   rWidth: DEFAULT_ROBOT_WIDTH,
   rHeight: DEFAULT_ROBOT_HEIGHT,
-  safetyMargin: 1,
-  maxVelocity: 40,
-  maxAcceleration: 30,
-  maxDeceleration: 30,
+  safetyMargin: 2.54,
+  maxVelocity: 102,
+  maxAcceleration: 76,
+  maxDeceleration: 76,
   fieldMap: "decode.webp",
   robotImage: "/robot.png",
   theme: "auto",
   showGhostPaths: false,
   showOnionLayers: false,
-  onionLayerSpacing: 3, // inches between each robot body trace
+  onionLayerSpacing: 8,
   onionColor: "#dc2626",
   onionNextPointOnly: false,
   showHeadingArrow: false,
@@ -58,8 +58,8 @@ export const DEFAULT_SETTINGS: Settings = {
  */
 export function getDefaultStartPoint(): Point {
   return {
-    x: 56,
-    y: 8,
+    x: 142,
+    y: 20,
     heading: "linear",
     startDeg: 90,
     endDeg: 180,
@@ -75,7 +75,7 @@ export function getDefaultLines(): Line[] {
     {
       id: `line-${Math.random().toString(36).slice(2)}`,
       name: "Path 1",
-      endPoint: { x: 56, y: 36, heading: "linear", startDeg: 90, endDeg: 180 },
+      endPoint: { x: 142, y: 91, heading: "linear", startDeg: 90, endDeg: 180 },
       controlPoints: [],
       color: "#ffc516",
       locked: false,
@@ -96,11 +96,11 @@ export function getDefaultShapes(): Shape[] {
       id: "triangle-1",
       name: "Red Goal",
       vertices: [
-        { x: 141.5, y: 70 },
-        { x: 141.5, y: 141.5 },
-        { x: 120, y: 141.5 },
-        { x: 138, y: 119 },
-        { x: 138, y: 70 },
+        { x: 359.41, y: 177.8 },
+        { x: 359.41, y: 359.41 },
+        { x: 304.8, y: 359.41 },
+        { x: 350.52, y: 302.26 },
+        { x: 350.52, y: 177.8 },
       ],
       color: "#dc2626",
       fillColor: "#ff6b6b",
@@ -109,11 +109,11 @@ export function getDefaultShapes(): Shape[] {
       id: "triangle-2",
       name: "Blue Goal",
       vertices: [
-        { x: 6, y: 119 },
-        { x: 25, y: 141.5 },
-        { x: 0, y: 141.5 },
-        { x: 0, y: 70 },
-        { x: 6, y: 70 },
+        { x: 15.24, y: 302.26 },
+        { x: 63.5, y: 359.41 },
+        { x: 0, y: 359.41 },
+        { x: 0, y: 177.8 },
+        { x: 15.24, y: 177.8 },
       ],
       color: "#2563eb",
       fillColor: "#60a5fa",

@@ -120,7 +120,7 @@
               bind:value={point.x}
               type="number"
               min="0"
-              max="141.5"
+              max="360"
               step={$snapToGrid && $showGrid ? $gridSize : 0.1}
               class="w-20 px-2 py-1 text-xs rounded-md bg-white dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-600 focus:outline-none focus:ring-1 focus:ring-blue-500"
               on:change={() => {
@@ -137,7 +137,7 @@
               bind:value={point.y}
               type="number"
               min="0"
-              max="141.5"
+              max="360"
               step={$snapToGrid && $showGrid ? $gridSize : 0.1}
               class="w-20 px-2 py-1 text-xs rounded-md bg-white dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-600 focus:outline-none focus:ring-1 focus:ring-blue-500"
               on:change={() => {

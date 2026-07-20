@@ -217,7 +217,7 @@
                   for="robot-width"
                   class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1"
                 >
-                  Robot Width (in)
+                  Robot Width (cm)
                   <div class="text-xs text-neutral-500 dark:text-neutral-400">
                     Width of the robot base
                   </div>
@@ -227,10 +227,10 @@
                   type="number"
                   value={settings.rWidth}
                   min="1"
-                  max="36"
-                  step="0.5"
+                  max="91"
+                  step="1"
                   on:input={(e) =>
-                    handleNumberInput(e.target.value, "rWidth", 1, 36)}
+                    handleNumberInput(e.target.value, "rWidth", 1, 91)}
                   class="w-full px-3 py-2 rounded-md border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
@@ -240,7 +240,7 @@
                   for="robot-height"
                   class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1"
                 >
-                  Robot Height (in)
+                  Robot Height (cm)
                   <div class="text-xs text-neutral-500 dark:text-neutral-400">
                     Height of the robot base
                   </div>
@@ -250,10 +250,10 @@
                   type="number"
                   value={settings.rHeight}
                   min="1"
-                  max="36"
-                  step="0.5"
+                  max="91"
+                  step="1"
                   on:input={(e) =>
-                    handleNumberInput(e.target.value, "rHeight", 1, 36)}
+                    handleNumberInput(e.target.value, "rHeight", 1, 91)}
                   class="w-full px-3 py-2 rounded-md border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
@@ -263,7 +263,7 @@
                   for="safety-margin"
                   class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1"
                 >
-                  Safety Margin (in)
+                  Safety Margin (cm)
                   <div class="text-xs text-neutral-500 dark:text-neutral-400">
                     Buffer around obstacles
                   </div>
@@ -273,10 +273,10 @@
                   type="number"
                   value={settings.safetyMargin}
                   min="0"
-                  max="24"
+                  max="61"
                   step="0.5"
                   on:input={(e) =>
-                    handleNumberInput(e.target.value, "safetyMargin", 0, 24)}
+                    handleNumberInput(e.target.value, "safetyMargin", 0, 61)}
                   class="w-full px-3 py-2 rounded-md border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
@@ -540,7 +540,7 @@
                     for="x-velocity"
                     class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1"
                   >
-                    X Velocity (in/s)
+                    X Velocity (cm/s)
                   </label>
                   <input
                     id="x-velocity"
@@ -559,7 +559,7 @@
                     for="y-velocity"
                     class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1"
                   >
-                    Y Velocity (in/s)
+                    Y Velocity (cm/s)
                   </label>
                   <input
                     id="y-velocity"
@@ -602,7 +602,7 @@
                   for="max-velocity"
                   class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1"
                 >
-                  Max Velocity (in/s)
+                  Max Velocity (cm/s)
                 </label>
                 <input
                   id="max-velocity"
@@ -623,7 +623,7 @@
                     for="max-acceleration"
                     class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1"
                   >
-                    Max Acceleration (in/s²)
+                    Max Acceleration (cm/s²)
                   </label>
                   <input
                     id="max-acceleration"
@@ -642,7 +642,7 @@
                     for="max-deceleration"
                     class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1"
                   >
-                    Max Deceleration (in/s²)
+                    Max Deceleration (cm/s²)
                   </label>
                   <input
                     id="max-deceleration"
@@ -794,7 +794,7 @@
                     >
                       Upload Custom Field Image
                       <div class="text-xs text-neutral-500 dark:text-neutral-400">
-                        Accepts PNG, JPG, WEBP (recommended: 144x144 inches aspect ratio)
+                        Accepts PNG, JPG, WEBP (recommended: 366×366 cm aspect ratio)
                       </div>
                     </label>
                     <input
@@ -936,8 +936,8 @@
                   <div class="flex items-center gap-2">
                     <input
                       type="range"
-                      min="2"
-                      max="20"
+                      min="5"
+                      max="51"
                       step="1"
                       bind:value={settings.onionLayerSpacing}
                       class="flex-1 h-2 bg-neutral-200 dark:bg-neutral-700 rounded-lg appearance-none cursor-pointer accent-indigo-500"
@@ -946,13 +946,13 @@
                     <span
                       class="text-sm font-medium text-neutral-700 dark:text-neutral-300 min-w-[3rem] text-right"
                     >
-                      {settings.onionLayerSpacing || 6}"
+                      {settings.onionLayerSpacing || 8} cm
                     </span>
                   </div>
                   <div
                     class="text-xs text-neutral-500 dark:text-neutral-400 mt-1"
                   >
-                    Distance in inches between each robot body trace
+                    Distance in cm between each robot body trace
                   </div>
                   <div class="mt-3">
                     <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
