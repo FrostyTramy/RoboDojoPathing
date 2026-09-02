@@ -58,6 +58,7 @@
     DEFAULT_ROBOT_HEIGHT,
     DEFAULT_SETTINGS,
     FIELD_SIZE,
+    getFieldDimensions,
     getDefaultStartPoint,
     getDefaultLines,
     getDefaultShapes,
@@ -372,20 +373,16 @@
   
   let secondRobotXY: BasePoint = { x: 0, y: 0 };
   let secondRobotHeading: number = 0;
-  /**
-   * Converter for X axis from inches to pixels.
-   */
+  $: ({ fieldWidth: fieldWidthCm, fieldHeight: fieldHeightCm } = getFieldDimensions(settings?.fieldMap ?? ""));
+
   $: x = d3
     .scaleLinear()
-    .domain([0, FIELD_SIZE])
-    .range([0, width || FIELD_SIZE]);
-  /**
-   * Converter for Y axis from inches to pixels.
-   */
+    .domain([0, fieldWidthCm])
+    .range([0, width || fieldWidthCm]);
   $: y = d3
     .scaleLinear()
-    .domain([0, FIELD_SIZE])
-    .range([height || FIELD_SIZE, 0]);
+    .domain([0, fieldHeightCm])
+    .range([height || fieldHeightCm, 0]);
   $: {
     // Calculate robot state using the Timeline
     if (timePrediction && timePrediction.timeline && lines.length > 0) {
@@ -2158,8 +2155,8 @@
           inchY = Math.round(rawInchY / currentGridSize) * currentGridSize;
 
           // Clamp to field boundaries
-          inchX = Math.max(0, Math.min(FIELD_SIZE, inchX));
-          inchY = Math.max(0, Math.min(FIELD_SIZE, inchY));
+          inchX = Math.max(0, Math.min(fieldWidthCm, inchX));
+          inchY = Math.max(0, Math.min(fieldHeightCm, inchY));
         }
 
         // Handle path point dragging
@@ -2391,8 +2388,8 @@
       }
 
       // Clamp to field boundaries
-      inchX = Math.max(0, Math.min(FIELD_SIZE, inchX));
-      inchY = Math.max(0, Math.min(FIELD_SIZE, inchY));
+      inchX = Math.max(0, Math.min(fieldWidthCm, inchX));
+      inchY = Math.max(0, Math.min(fieldHeightCm, inchY));
 
       // Create a new line with endPoint at the clicked position
       const newLine: Line = {
@@ -2604,7 +2601,7 @@
       robot_width: settings.rWidth,
       robot_height: settings.rHeight,
       min_coord_field: 0,
-      max_coord_field: FIELD_SIZE,
+      max_coord_field: Math.max(fieldWidthCm, fieldHeightCm),
       interpolation:
         line.endPoint.heading === "tangential"
           ? "tangent"
@@ -3043,9 +3040,9 @@
       bind:this={twoElement}
       bind:clientWidth={width}
       bind:clientHeight={height}
-      class="h-full aspect-square rounded-lg shadow-md relative overflow-clip border border-blue-900/40"
+      class="h-full rounded-lg shadow-md relative overflow-clip border border-blue-900/40"
       role="application"
-      style="background: #060d1a; user-select: none; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; -webkit-touch-callout: none; -webkit-tap-highlight-color: transparent; user-drag: none; -webkit-user-drag: none; -khtml-user-drag: none; -moz-user-drag: none; -ms-user-drag: none; -o-user-drag: none;"
+      style="aspect-ratio: {fieldWidthCm}/{fieldHeightCm}; background: #060d1a; user-select: none; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; -webkit-touch-callout: none; -webkit-tap-highlight-color: transparent; user-drag: none; -webkit-user-drag: none; -khtml-user-drag: none; -moz-user-drag: none; -ms-user-drag: none; -o-user-drag: none;"
       on:contextmenu={(e) => e.preventDefault()}
       on:dragstart={(e) => e.preventDefault()}
       on:selectstart={(e) => e.preventDefault()}

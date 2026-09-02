@@ -15,14 +15,22 @@ export const LINE_WIDTH = 1.45;
 export const FIELD_SIZE = 359.41;
 
 /**
- * Available field maps
+ * Available field maps. fieldWidth/fieldHeight are in cm.
  */
 export const AVAILABLE_FIELD_MAPS = [
-  { value: "decode.webp", label: "DECODE Field (2025-2026)" },
-  { value: "intothedeep.webp", label: "Into The Deep Field (2024-2025)" },
-  { value: "centerstage.webp", label: "Centerstage (2023-2024)" },
-  { value: "custom", label: "Custom Field (Upload)" },
+  { value: "decode.webp", label: "DECODE Field (2025-2026)", fieldWidth: FIELD_SIZE, fieldHeight: FIELD_SIZE },
+  { value: "intothedeep.webp", label: "Into The Deep Field (2024-2025)", fieldWidth: FIELD_SIZE, fieldHeight: FIELD_SIZE },
+  { value: "centerstage.webp", label: "Centerstage (2023-2024)", fieldWidth: FIELD_SIZE, fieldHeight: FIELD_SIZE },
+  { value: "orig2026.webp", label: "ORIG 2026 Field (2025-2026)", fieldWidth: 365.76, fieldHeight: 609.60 },
+  { value: "custom", label: "Custom Field (Upload)", fieldWidth: FIELD_SIZE, fieldHeight: FIELD_SIZE },
 ];
+
+export function getFieldDimensions(fieldMap: string): { fieldWidth: number; fieldHeight: number } {
+  const entry = AVAILABLE_FIELD_MAPS.find((f) => f.value === fieldMap);
+  return entry
+    ? { fieldWidth: entry.fieldWidth, fieldHeight: entry.fieldHeight }
+    : { fieldWidth: FIELD_SIZE, fieldHeight: FIELD_SIZE };
+}
 
 /**
  * Default settings (all units in cm and cm/s)

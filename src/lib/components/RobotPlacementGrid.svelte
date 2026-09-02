@@ -1,11 +1,15 @@
 <script lang="ts">
   import type { Point, Settings, Line } from "../../types";
+  import type * as d3 from "d3";
 
   export let startPoint: Point;
   export let settings: Settings;
   export let lines: Line[] = [];
+  export let x: d3.ScaleLinear<number, number, number>;
+  export let y: d3.ScaleLinear<number, number, number>;
 
-  const FIELD_SIZE = 359.41;
+  $: fieldWidthCm = x.domain()[1];
+  $: fieldHeightCm = y.domain()[1];
 
   const positions = [
     { label: "↖", col: 0, row: 0 },
@@ -36,8 +40,8 @@
     const hx = Math.round(boundingHalfX * 10) / 10;
     const hy = Math.round(boundingHalfY * 10) / 10;
 
-    const xs = [hx, FIELD_SIZE / 2, FIELD_SIZE - hx];
-    const ys = [FIELD_SIZE - hy, FIELD_SIZE / 2, hy];
+    const xs = [hx, fieldWidthCm / 2, fieldWidthCm - hx];
+    const ys = [fieldHeightCm - hy, fieldHeightCm / 2, hy];
 
     startPoint = {
       ...startPoint,

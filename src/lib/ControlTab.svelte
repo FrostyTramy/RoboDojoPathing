@@ -793,7 +793,7 @@
     <!-- Facing: changes lines[0].endPoint.startDeg which is what the renderer actually uses -->
     <StartingFacing bind:lines />
 
-    <RobotPlacementGrid bind:startPoint {settings} {lines} />
+    <RobotPlacementGrid bind:startPoint {settings} {lines} {x} {y} />
 
     <div class="w-full rounded-md border border-neutral-200 dark:border-neutral-700 p-3 bg-white dark:bg-neutral-800">
       <div class="flex items-center gap-2 mb-2">

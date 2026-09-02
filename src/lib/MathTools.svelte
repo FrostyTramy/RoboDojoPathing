@@ -73,8 +73,8 @@
     let inchY = y.invert(mouseY);
 
     // Clamp to field boundaries
-    inchX = Math.max(0, Math.min(FIELD_SIZE, inchX));
-    inchY = Math.max(0, Math.min(FIELD_SIZE, inchY));
+    inchX = Math.max(0, Math.min(x.domain()[1], inchX));
+    inchY = Math.max(0, Math.min(y.domain()[1], inchY));
 
     if (rulerDragging === "start") {
       rulerStart = { x: inchX, y: inchY };
@@ -120,23 +120,29 @@
     ? { x: x.invert(robotXY.x), y: y.invert(robotXY.y) }
     : protractorPos;
 
-  const FIELD_SIZE = 359.41;
-  let spacing = 30;
-  let gridPositions: number[] = [];
-  let labelInterval = 1; // Show label every N grid lines
-  let labelFontSize = "text-xs"; // Font size class for labels
+  $: fieldWidthCm = x.domain()[1];
+  $: fieldHeightCm = y.domain()[1];
 
-  $: spacing = Math.max(1, $gridSize || 12);
-  $: gridPositions = (() => {
+  let spacing = 30;
+  let gridPositionsX: number[] = [];
+  let gridPositionsY: number[] = [];
+  let labelInterval = 1;
+  let labelFontSize = "text-xs";
+
+  function makeGridPositions(fieldSize: number, step: number): number[] {
     const positions: number[] = [];
-    for (let pos = 0; pos <= FIELD_SIZE; pos += spacing) {
+    for (let pos = 0; pos <= fieldSize; pos += step) {
       positions.push(Number(pos.toFixed(6)));
     }
-    if (positions[positions.length - 1] !== FIELD_SIZE) {
-      positions.push(FIELD_SIZE);
+    if (positions[positions.length - 1] !== fieldSize) {
+      positions.push(fieldSize);
     }
     return positions;
-  })();
+  }
+
+  $: spacing = Math.max(1, $gridSize || 12);
+  $: gridPositionsX = makeGridPositions(fieldWidthCm, spacing);
+  $: gridPositionsY = makeGridPositions(fieldHeightCm, spacing);
 
   // Adjust label frequency and size based on grid density
   $: {
@@ -161,17 +167,17 @@
 {#if $showGrid}
   <svg class="absolute top-0 left-0 w-full h-full pointer-events-none z-20">
     <!-- Vertical grid lines -->
-    {#each gridPositions as position, i}
+    {#each gridPositionsX as position, i}
       <line
         x1={x(position)}
         y1={y(0)}
         x2={x(position)}
-        y2={y(FIELD_SIZE)}
+        y2={y(fieldHeightCm)}
         stroke={i % 2 === 0 ? "#6b7280" : "#9ca3af"}
         stroke-width={i % 2 === 0 ? "1.5" : "0.5"}
         opacity="0.3"
       />
-      {#if i % labelInterval === 0 || position === 0 || position === FIELD_SIZE}
+      {#if i % labelInterval === 0 || position === 0 || position === fieldWidthCm}
         <text
           x={x(position)}
           y={y(0) + 15}
@@ -184,17 +190,17 @@
     {/each}
 
     <!-- Horizontal grid lines -->
-    {#each gridPositions as position, i}
+    {#each gridPositionsY as position, i}
       <line
         x1={x(0)}
         y1={y(position)}
-        x2={x(FIELD_SIZE)}
+        x2={x(fieldWidthCm)}
         y2={y(position)}
         stroke={i % 2 === 0 ? "#6b7280" : "#9ca3af"}
         stroke-width={i % 2 === 0 ? "1.5" : "0.5"}
         opacity="0.3"
       />
-      {#if i % labelInterval === 0 || position === 0 || position === FIELD_SIZE}
+      {#if i % labelInterval === 0 || position === 0 || position === fieldHeightCm}
         <text
           x={x(0) - 5}
           y={y(position) + 4}
