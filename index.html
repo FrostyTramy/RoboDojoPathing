@@ -1,31 +1,32 @@
 <!doctype html>
-<html class="h-full w-full" lang="en">
+<html class="dark h-full w-full" lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>RoboDojo #23205</title>
+    <meta name="theme-color" content="#0d1724" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent"
+    />
+    <title>RoboDojo #23205 Visualizer</title>
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-  </head>
-  <body
-    class="h-full w-full font-poppins text-white" style="background: linear-gradient(135deg, #040b18 0%, #0a1628 50%, #0d1f3c 100%)"
-  >
-    <script type="module" src="/src/main.ts"></script>
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <!-- Applies the saved theme before first paint; state/theme.svelte.ts owns it after. -->
     <script>
-      if ("serviceWorker" in navigator) {
-        navigator.serviceWorker.register("sw.js").then(
-          (registration) => {
-            console.log(
-              "Service worker registration successful:",
-              registration,
-            );
-          },
-          (error) => {
-            console.error(`Service worker registration failed: ${error}`);
-          },
-        );
-      } else {
-        console.error("Service workers are not supported.");
-      }
+      try {
+        const theme = (localStorage.getItem("theme") || "").replaceAll('"', "");
+        const dark =
+          theme === "light"
+            ? false
+            : theme === "system"
+              ? matchMedia("(prefers-color-scheme: dark)").matches
+              : true;
+        document.documentElement.classList.toggle("dark", dark);
+      } catch {}
     </script>
+  </head>
+  <body class="h-full w-full">
+    <script type="module" src="/src/main.ts"></script>
   </body>
 </html>

@@ -11,6 +11,8 @@ node_modules
 dist
 dist-ssr
 *.local
+test-results
+playwright-report
 
 # Editor directories and files
 .vscode/*
@@ -24,3 +26,5 @@ dist-ssr
 *.sw?
 .vercel
 ws_client.html
+
+vite.config.d.ts
