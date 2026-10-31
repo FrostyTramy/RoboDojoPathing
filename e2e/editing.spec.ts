@@ -1,7 +1,9 @@
 import { expect, test, type Page } from "@playwright/test";
 
-/** The default project: one path ending at (56, 36), drawn as `point-1-0`. */
+/** The default project: one path ending at (56, 36) in, drawn as `point-1-0`. */
 const ENDPOINT = "#point-1-0";
+/** That end point as the inspector shows it, in centimetres. */
+const DEFAULT_END = "142.2, 91.4";
 
 async function openApp(page: Page) {
   const errors: string[] = [];
@@ -52,14 +54,14 @@ test("dragging a point moves it, and undo and redo restore it", async ({
   page,
 }) => {
   await openApp(page);
-  await expectSelectedPoint(page, "56.0, 36.0");
+  await expectSelectedPoint(page, DEFAULT_END);
 
   await drag(page, ENDPOINT, 120, 0);
   const moved = await selectedPoint(page);
-  expect(moved).not.toBe("56.0, 36.0");
+  expect(moved).not.toBe(DEFAULT_END);
 
   await undo(page);
-  await expectSelectedPoint(page, "56.0, 36.0");
+  await expectSelectedPoint(page, DEFAULT_END);
   await redo(page);
   await expectSelectedPoint(page, moved);
 });
@@ -73,14 +75,14 @@ test("one drag is one undo step", async ({ page }) => {
   await undo(page);
   await expectSelectedPoint(page, afterFirst);
   await undo(page);
-  await expectSelectedPoint(page, "56.0, 36.0");
+  await expectSelectedPoint(page, DEFAULT_END);
 });
 
 test("adding a path is undoable", async ({ page }) => {
   await openApp(page);
   expect(await pathCount(page)).toBe(1);
 
-  await page.getByRole("button", { name: "Add path" }).click();
+  await page.getByRole("button", { name: "Add path", exact: true }).click();
   await expect.poll(() => pathCount(page)).toBe(2);
 
   await undo(page);
@@ -92,10 +94,10 @@ test("typing a coordinate moves the point in one undo step", async ({
 }) => {
   await openApp(page);
   await page.getByLabel("End X", { exact: true }).fill("100");
-  await expectSelectedPoint(page, "100.0, 36.0");
+  await expectSelectedPoint(page, "100.0, 91.4");
 
   await undo(page);
-  await expectSelectedPoint(page, "56.0, 36.0");
+  await expectSelectedPoint(page, DEFAULT_END);
 });
 
 test("the session survives a reload", async ({ page }) => {
@@ -139,11 +141,11 @@ test("duplicate mirrored opens a mirrored copy", async ({ page }) => {
   await page.getByRole("menuitem", { name: "Duplicate mirrored…" }).click();
   await page.getByRole("button", { name: "Create" }).click();
   await expect(
-    page.getByText("path_mirrored.pp", { exact: true }),
+    page.getByText("path_mirrored.pp.json", { exact: true }),
   ).toBeVisible();
-  // The field is 141.5" wide, so x = 56 lands on 85.5.
+  // The field is 141.5" wide, so x = 56 in lands on 85.5 in (217.2 cm).
   await page.locator(ENDPOINT).click();
-  await expectSelectedPoint(page, "85.5, 36.0");
+  await expectSelectedPoint(page, "217.2, 91.4");
 });
 
 test("the context menu adds a control point", async ({ page }) => {
